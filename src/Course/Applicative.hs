@@ -69,7 +69,7 @@ instance Applicative List where
     -> List a
     -> List b
   (<*>) f a =
-    flatMap (\f' -> map (\a' -> f' a') a) f
+    flatMap (\f' -> map f' a) f
 
 -- | Witness that all things with (<*>) and pure also have (<$>).
 --
@@ -263,7 +263,7 @@ lift4 f a b c d =
   -> f b
   -> f b
 (*>) =
-  error "todo: Course.Applicative#(*>)"
+  lift2 (\_ b -> b)
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
@@ -289,7 +289,7 @@ lift4 f a b c d =
   -> f a
   -> f b
 (<*) =
-  error "todo: Course.Applicative#(<*)"
+  lift2 (\a _ -> a)
 
 -- | Sequences a list of structures to a structure of list.
 --
@@ -312,7 +312,7 @@ sequence ::
   List (f a)
   -> f (List a)
 sequence =
-  error "todo: Course.Applicative#sequence"
+  foldRight (lift2 (:.)) (pure Nil)
 
 -- | Replicate an effect a given number of times.
 --
