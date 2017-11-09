@@ -68,8 +68,8 @@ instance Applicative List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) f a =
-    flatMap (\f' -> map f' a) f
+  (<*>) fs a =
+    flatMap (\f -> map f a) fs
 
 -- | Witness that all things with (<*>) and pure also have (<$>).
 --
@@ -363,8 +363,8 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo: Course.Applicative#filtering"
+filtering p =
+  foldRight (\a -> lift2 (\b -> if b then (a:.) else id) (p a)) (pure Nil)
 
 -----------------------
 -- SUPPORT LIBRARIES --
